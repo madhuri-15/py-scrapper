@@ -1,15 +1,11 @@
 """
 Python class to scrap animation movies from the imdb websites.
-The scripts outputs list of movie title, year, rated, runtime, genre, rating, description and total votes.
+The scripts outputs list of movies with movie title, year, rated, runtime, genre, rating, description and total votes.
 """
-
-
-from base64 import encode
-from textwrap import indent
+import json 
 import requests
 import numpy as np
 import pandas as pd
-import json 
 from bs4 import BeautifulSoup
 
 # Python class to scrape animation Movies.
@@ -28,10 +24,10 @@ class imdb_movie_scrapper:
     # Function to scraps movies to retrive movies titles,  year, rated, runtime, genre, rating, description and total votes.
     # Returns a list of dictionaries.
     def scrape(self):
-        soup_object = self.soup
+        soup = self.soup
         movies = []
         
-        for content in soup_object.findAll('div', attrs= {'class': 'lister-item-content'}):
+        for content in soup.findAll('div', attrs= {'class': 'lister-item-content'}):
             output = {}
             
             # movie title
@@ -98,23 +94,14 @@ class imdb_movie_scrapper:
 
 if __name__ == "__main__":
 
-    movies = []
+    url = "https://www.imdb.com/search/title/?title_type=feature&num_votes=25000,&genres=animation&sort=user_rating,desc&start=0&ref_=adv_nxt"
+    obj = imdb_movie_scrapper(url)
+        
+    # return list of dictionaries.
+    output = obj.scrape()
     
-    for page in range(1, 312, 50):
-        url = "https://www.imdb.com/search/title/?title_type=feature&num_votes=25000,&genres=animation&sort=user_rating,desc&start=page&ref_=adv_nxt"
-        
-        obj = imdb_movie_scrapper(url)
-        
-        # return list of dictionaries.
-        output = obj.scrape()
-        movies = movies + output
-
-    with open('animation_movies.json', 'a') as f:
-        json_dumps = json.dumps(movies, indent=4, ensure_ascii=False)
+    # To create a json file.
+    with open('animation_movies.json', 'w') as f:
+        json_dumps = json.dumps(output, indent=4, ensure_ascii=False)
         f.write(json_dumps)     
-       
-    
-    
-    
-    
     
