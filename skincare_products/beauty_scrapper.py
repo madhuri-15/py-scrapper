@@ -1,6 +1,7 @@
 # Importing libraries
 import requests
 from bs4 import BeautifulSoup
+
 import pandas as pd
 import numpy as np
 
@@ -114,7 +115,6 @@ if __name__ == '__main__':
                 products['price'].append(get_price(soup)) 
                 products['ratings'].append(get_ratings(soup))
                 products['total_ratings'].append(get_total_ratings(soup))
-
 
             skincare_df = pd.DataFrame.from_dict(products)
             amazon_beauty_product_dfs.append(skincare_df)            
